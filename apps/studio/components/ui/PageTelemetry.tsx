@@ -35,7 +35,8 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     function handleRouteChange(url: string) {
-      if (snap.isOptedInTelemetry) handlePageTelemetry(url)
+      handlePageTelemetry(url)
+      // if (snap.isOptedInTelemetry) handlePageTelemetry(url)
     }
 
     // Listen for page changes after a navigation or when the query changes
@@ -49,7 +50,8 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
     // Send page telemetry on first page load
     // Waiting for router ready before sending page_view
     // if not the path will be dynamic route instead of the browser url
-    if (router.isReady && snap.isOptedInTelemetry) {
+    if(router.isReady) {
+    // if (router.isReady && snap.isOptedInTelemetry) {
       handlePageTelemetry(router.asPath)
     }
   }, [router.isReady, snap.isOptedInTelemetry])
@@ -80,7 +82,7 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
    * @param route: the browser url
    * */
   const handlePageTelemetry = async (route: string) => {
-    if (IS_PLATFORM) {
+    // if (IS_PLATFORM) {
       /**
        * Get referrer from browser
        */
@@ -89,11 +91,12 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
       /**
        * Send page telemetry
        */
-      post(`${API_URL}/telemetry/page`, {
+      post(`http://localhost:3231/telemetry/page`, {
+      // post(`${API_URL}/telemetry/page`, {
         referrer: referrer,
         title: document.title,
         route,
-        current_url: window.location.href,
+        current_url: document.location.href,
         ga: {
           screen_resolution: telemetryProps?.screenResolution,
           language: telemetryProps?.language,
@@ -103,18 +106,19 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
       }, {
         credentials: 'include'
       })
-    }
+    // }
   }
 
   const handlePageLeaveTelemetry = async () => {
-    if (IS_PLATFORM) {
-      post(`${API_URL}/telemetry/pageleave`, {
-        route: window.location.pathname,
-        current_url: window.location.href,
+    // if (IS_PLATFORM) {
+      post(`http://localhost:3231/telemetry/pageleave`, {
+      // post(`${API_URL}/telemetry/pageleave`, {
+        route: document.location.pathname,
+        current_url: document.location.href,
       }, {
         credentials: 'include'
       })
-    }
+    // }
   }
 
   return <>{children}</>

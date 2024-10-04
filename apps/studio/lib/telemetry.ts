@@ -25,13 +25,13 @@ const sendEvent = (
   gaProps: TelemetryProps,
   router: NextRouter
 ) => {
-  if (!IS_PLATFORM) return
+  // if (!IS_PLATFORM) return
 
   const consent =
     typeof window !== 'undefined'
       ? localStorage.getItem(LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT)
       : null
-  if (consent !== 'true') return
+  // if (consent !== 'true') return
 
   const { category, action, label, value } = event
 
@@ -40,12 +40,14 @@ const sendEvent = (
   // such as access/refresh tokens
   const page_location = router.asPath.split('#')[0]
 
-  return post(`${API_URL}/telemetry/event`, {
+  return post(`http://localhost:3231/telemetry/event`, {
+  // return post(`${API_URL}/telemetry/event`, {
     action: action,
     category: category,
     label: label,
     value: value,
     page_referrer: document?.referrer,
+    current_url: document?.location.href,
     page_title: document?.title,
     page_location,
     ga: {
@@ -64,15 +66,16 @@ const sendEvent = (
  * We may or may not need gaClientId here. Confirm later
  */
 const sendIdentify = (user: User, gaProps?: TelemetryProps) => {
-  if (!IS_PLATFORM) return
+  // if (!IS_PLATFORM) return
 
   const consent =
     typeof window !== 'undefined'
       ? localStorage.getItem(LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT)
       : null
-  if (consent !== 'true') return
+  // if (consent !== 'true') return
 
-  return post(`${API_URL}/telemetry/identify`, {
+  return post(`http://localhost:3231/telemetry/identify`, {
+  // return post(`${API_URL}/telemetry/identify`, {
     user,
     ga: {
       screen_resolution: gaProps?.screenResolution,

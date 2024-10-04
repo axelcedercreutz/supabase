@@ -33,11 +33,12 @@ export default function App({ Component, pageProps }: AppProps) {
   useThemeSandbox()
 
   function handlePageTelemetry(route: string) {
-    return post(`${API_URL}/telemetry/page`, {
+    post(`http://localhost:3231/telemetry/page`, {
+    // return post(`${API_URL}/telemetry/page`, {
       referrer: document.referrer,
       title: document.title,
       route,
-      current_url: window.location.href,
+      current_url: document.location.href,
       ga: {
         screen_resolution: telemetryProps?.screenResolution,
         language: telemetryProps?.language,
@@ -50,17 +51,18 @@ export default function App({ Component, pageProps }: AppProps) {
   }
 
 
-  const handlePageLeaveTelemetry = async () => {
-      post(`${API_URL}/telemetry/pageleave`, {
-        route: window.location.pathname,
-        current_url: window.location.href,
+  function handlePageLeaveTelemetry() {
+    post(`http://localhost:3231/telemetry/pageleave`, {
+      // post(`${API_URL}/telemetry/pageleave`, {
+        route: document.location.pathname,
+        current_url: document.location.href,
       }, {
         credentials: 'include'
       })
   }
 
   useEffect(() => {
-    if (blockEvents) return
+    // if (blockEvents) return
     const handleBeforeUnload = () => {
         if (router.isReady) {
           handlePageLeaveTelemetry()
@@ -74,7 +76,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
 
   useEffect(() => {
-    if (blockEvents) return
+    // if (blockEvents) return
     function handleRouteChange(url: string) {
       handlePageTelemetry(url)
     }
@@ -87,7 +89,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [router.events, consentValue])
 
   useEffect(() => {
-    if (blockEvents) return
+    // if (blockEvents) return
     /**
      * Send page telemetry on first page load
      */

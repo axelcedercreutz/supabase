@@ -31,15 +31,17 @@ const sendEvent = (event: TelemetryEvent, gaProps: TelemetryProps, router: NextR
   const IS_DEV = !IS_PROD && !IS_PREVIEW
   const blockEvent = IS_DEV || !hasAcceptedConsent
 
-  if (blockEvent) return noop
+  // if (blockEvent) return noop
 
   const { category, action, label, value } = event
-  return post(`${API_URL}/telemetry/event`, {
+  return post(`http://localhost:3231/telemetry/event`, {
+  // return post(`${API_URL}/telemetry/event`, {
     action: action,
     category: category,
     label: label,
     value: value,
     page_referrer: document?.referrer,
+    current_url: document?.location.href,
     page_title: document?.title,
     page_location: router.asPath,
     ga: {
