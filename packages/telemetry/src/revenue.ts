@@ -13,7 +13,7 @@ export type subscription_canceled = {
   /**
    * The name of the canceled plan.
    */
-  cancelledPlanName: 'free' | 'pro' | 'team' | 'enterprise'
+  canceledPlanName: 'free' | 'pro' | 'team' | 'enterprise'
   /**
    * The value of the canceled plan. In dollars.
    */

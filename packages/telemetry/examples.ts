@@ -10,8 +10,6 @@ const sendEvent = <K extends Telemetry.EventName>(
 
 console.log(sendEvent('sign_up'))
 
-// console.log(sendEvent('sign_in', {}))
-
 console.log(
   sendEvent('$pageleave', {
     current_url: 'http://localhost:3000',
@@ -27,9 +25,31 @@ console.log(
   })
 )
 
+/**
+ * checks that no empty params object is sent if no params are defined
+ */
+
+// console.log(sendEvent('sign_in', {}))
+
+/**
+ * Checks that all required fields are present in the params
+ */
+
 // console.log(
 //   sendEvent('$pageview', {
 //     current_url: 'http://localhost:3000',
 //     page_title: 'Studio',
+//   })
+// )
+
+/**
+ * Check that enum values are correct in the params
+ */
+
+// console.log(
+//   sendEvent('subscription_canceled', {
+//     canceledPlanBillingCycle: 'monthly',
+//     canceledPlanName: 'Pro',
+//     canceledPlanValue: 10,
 //   })
 // )
