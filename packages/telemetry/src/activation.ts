@@ -1,79 +1,97 @@
 /**
- * Represents the various events related to activation.
- * @group Activation
+ * Improve User Onboarding and Activation Rate
+ * @module Activation
  */
 
-export interface ActivationEvents {
-    /**
-     * A new organization is created.
-     * 
-     * @source server-side
-     */
-    organization_created: {},
-    /**
-     * An organization is removed.
-     * 
-     * @source server-side
-     */
-    organization_removed: {},
-    /**
-     * An organization is updated.
-     * 
-     * @source server-side
-     */
-    organization_updated: {},
-    /**
-     * A new project is created.
-     * 
-     * @source server-side
-     */
-    project_created: {},
-    /**
-     * A project is restored.
-     * 
-     * @source server-side
-     */
-    project_restored: {},
-    /**
-     * A project is removed.
-     * 
-     * @source server-side
-     */
-    project_removed: {},
-    /**
-     * A project is updated.
-     * 
-     * @source server-side
-     */
-    project_updated: {},
-    /**
-     * New user signs up successfully.
-     * 
-     * @source client-side studio
-     */
-    sign_up: {},
-    /**
-     * New user signs up successfully.
-     * 
-     * @source client-side studio
-     */
-    example_project_clicked: {},
-    /**
-     * The "Help" -button is clicked.
-     * 
-     * @source client-side studio
-     */
-    help_clicked: {},
-    /**
-     * The project connection options are opened.
-     * 
-     * @source client-side studio
-     */
-    connect_project_clicked: {},
-    /**
-     * Data to a database table is submitted.
-     * 
-     * @source client-side studio
-     */
-    import_table_data_clicked: {}
+/**
+ * A new organization is created.
+ * @group Events
+ * @source server-side
+ */
+export type organization_created = never
+/**
+ * An organization is removed.
+ * @group Events
+ * @source server-side
+ * */
+export type organization_removed = never
+/**
+ * An organization is updated.
+ * @group Events
+ * @source server-side
+ */
+export type organization_updated = never
+/**
+ * A new project is created.
+ * @group Events
+ * @source server-side
+ */
+export type project_created = never
+/**
+ * A project is restored.
+ * @group Events
+ * @source server-side
+ */
+export type project_restored = never
+/**
+ * A project is removed.
+ * @group Events
+ * @source server-side
+ */
+export type project_removed = never
+/**
+ * A project is updated.
+ * @group Events
+ * @source server-side
+ */
+export type project_updated = never
+/**
+ * New user signs up successfully.
+ * @group Events
+ * @source client-side studio
+ */
+export type sign_up = never
+/**
+ * New user signs up successfully.
+ * @group Events
+ * @source client-side studio
+ */
+export type example_project_clicked = never
+/**
+ * The "Help" -button is clicked.
+ * @group Events
+ * @source client-side studio
+ */
+export type help_clicked = never
+/**
+ * The project connection options are opened.
+ * @group Events
+ * @source client-side studio
+ */
+export type connect_project_clicked = never
+/**
+ * Data to a database table is submitted.
+ * @group Events
+ * @source client-side studio
+ */
+export type import_table_data_clicked = never
+
+/**
+ * Event that's used to combine all activation events.
+ * Hidden from the docs as it's only meant to be used for type-checking.
+ * @hidden
+ */
+export type ActivationEvents = {
+  organization_created: organization_created
+  organization_removed: organization_removed
+  organization_updated: organization_updated
+  project_created: project_created
+  project_restored: project_restored
+  project_removed: project_removed
+  project_updated: project_updated
+  sign_up: sign_up
+  example_project_clicked: example_project_clicked
+  help_clicked: help_clicked
+  connect_project_clicked: connect_project_clicked
+  import_table_data_clicked: import_table_data_clicked
 }
