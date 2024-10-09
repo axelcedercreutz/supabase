@@ -6,10 +6,11 @@ import { API_URL, IS_PLATFORM, LOCAL_STORAGE_KEYS } from 'lib/constants'
 import type { User } from 'types'
 
 export interface TelemetryProps {
-  screenResolution?: string
   language: string
-  userAgent?: string
   search?: string
+  user_agent?: string
+  viewport_height?: number
+  viewport_width?: number
 }
 
 /**
@@ -22,16 +23,16 @@ const sendEvent = (
     label: string
     value?: string
   },
-  gaProps: TelemetryProps,
+  phProps: TelemetryProps,
   router: NextRouter
 ) => {
-  // if (!IS_PLATFORM) return
+  if (!IS_PLATFORM) return
 
   const consent =
     typeof window !== 'undefined'
       ? localStorage.getItem(LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT)
       : null
-  // if (consent !== 'true') return
+  if (consent !== 'true') return
 
   const { category, action, label, value } = event
 
@@ -40,53 +41,130 @@ const sendEvent = (
   // such as access/refresh tokens
   const page_location = router.asPath.split('#')[0]
 
-  return post(`http://localhost:3231/telemetry/event`, {
-  // return post(`${API_URL}/telemetry/event`, {
-    action: action,
-    category: category,
-    label: label,
-    value: value,
-    page_referrer: document?.referrer,
-    current_url: document?.location.href,
-    page_title: document?.title,
-    page_location,
-    ga: {
-      screen_resolution: gaProps.screenResolution,
-      language: gaProps.language,
-      user_agent: gaProps.userAgent,
-      search: gaProps.search,
+  return post(
+    `${API_URL}/telemetry/event`,
+    {
+      action: action,
+      page_url: document?.location.href,
+      page_title: document?.title,
+      pathname: page_location,
+      ph: {
+        referrer: document?.referrer,
+        ...phProps,
+      },
+      custom_properties: {
+        category,
+        label,
+        value,
+      },
     },
-  }, {
-    credentials: 'include'
-  })
+    {
+      credentials: 'include',
+    }
+  )
 }
 
 /**
- * TODO: GA4 doesn't have identify method.
- * We may or may not need gaClientId here. Confirm later
+ * Sends a request to the telemetry endpoint to identify the user.
+ * This is used when the user logs in.
  */
-const sendIdentify = (user: User, gaProps?: TelemetryProps) => {
-  // if (!IS_PLATFORM) return
+const sendIdentify = (user: User, pathname: string) => {
+  if (!IS_PLATFORM) return
 
   const consent =
     typeof window !== 'undefined'
       ? localStorage.getItem(LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT)
       : null
-  // if (consent !== 'true') return
+  if (consent !== 'true') return
 
-  return post(`http://localhost:3231/telemetry/identify`, {
-  // return post(`${API_URL}/telemetry/identify`, {
-    user,
-    ga: {
-      screen_resolution: gaProps?.screenResolution,
-      language: gaProps?.language,
-      user_agent: gaProps?.userAgent,
-      search: gaProps?.search,
+  const organization_slug =
+    pathname.match(/\/dashboard\/org\/([^\/]+)\//) ??
+    localStorage.getItem(LOCAL_STORAGE_KEYS.RECENTLY_VISITED_ORGANIZATION)
+  const project_ref = pathname.match(/\/dashboard\/project\/([^\/]+)\//)
+
+  return post(
+    `${API_URL}/telemetry/identify`,
+    {
+      user_id: user.gotrue_id,
+      ...(!!organization_slug && { organization_slug: organization_slug[1] }),
+      ...(!!project_ref && { project_ref: project_ref[1] }),
     },
-  }, {
-    credentials: 'include'
-  })
+    {
+      credentials: 'include',
+    }
+  )
 }
+
+/**
+ * Sends a request to the telemetry endpoint to reset the user's identity, organization and group.
+ * This is used when the user logs out.
+ */
+const sendReset = () => {
+  if (!IS_PLATFORM) return
+  const consent =
+    typeof window !== 'undefined'
+      ? localStorage.getItem(LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT)
+      : null
+  if (consent !== 'true') return
+
+  return post(`${API_URL}/telemetry/reset`, {}, { credentials: 'include' })
+}
+
+/**
+ * Sends a request to the telemetry endpoint to identify the group/groups the user is working in.
+ * This is used when the user navigates to a new organization or project.
+ */
+const sendGroupIdentify = ({
+  organizationSlug,
+  projectRef,
+}: {
+  organizationSlug?: string
+  projectRef?: string
+}) => {
+  if (!IS_PLATFORM) return
+  const consent =
+    typeof window !== 'undefined'
+      ? localStorage.getItem(LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT)
+      : null
+  if (consent !== 'true') return
+  if (!organizationSlug && !projectRef) return
+  return post(
+    `${API_URL}/telemetry/group/identify`,
+    {
+      ...(!!organizationSlug && { organization_slug: organizationSlug }),
+      ...(!!projectRef && { project_ref: projectRef }),
+    },
+    {
+      credentials: 'include',
+    }
+  )
+}
+
+/**
+ * Sends a request to the telemetry endpoint to reset the group/groups the user is working in.
+ * This is used when the user navigates to a new organization or project.
+ */
+
+const sendGroupReset = ({ resetOrganization = false, resetProject = false }) => {
+  if (!IS_PLATFORM) return
+  const consent =
+    typeof window !== 'undefined'
+      ? localStorage.getItem(LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT)
+      : null
+  if (consent !== 'true') return
+  if (!resetOrganization && !resetProject) return
+  return post(
+    `${API_URL}/telemetry/group/reset`,
+    {
+      ...(!!resetOrganization && { reset_organization: resetOrganization }),
+      ...(!!resetProject && { reset_project: resetProject }),
+    },
+    {
+      credentials: 'include',
+    }
+  )
+}
+
 /**
  * Generates a unique identifier for an anonymous user based on their gotrue id.
  */
@@ -102,6 +180,9 @@ export const getAnonId = async (id: string) => {
 const Telemetry = {
   sendEvent,
   sendIdentify,
+  sendReset,
+  sendGroupIdentify,
+  sendGroupReset,
 }
 
 export default Telemetry

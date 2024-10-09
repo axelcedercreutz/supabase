@@ -33,50 +33,52 @@ export default function App({ Component, pageProps }: AppProps) {
   useThemeSandbox()
 
   function handlePageTelemetry(route: string) {
-    post(`http://localhost:3231/telemetry/page`, {
-    // return post(`${API_URL}/telemetry/page`, {
-      referrer: document.referrer,
-      title: document.title,
-      route,
-      current_url: document.location.href,
-      ga: {
-        screen_resolution: telemetryProps?.screenResolution,
-        language: telemetryProps?.language,
-        user_agent: telemetryProps?.userAgent,
-        search: telemetryProps?.search,
+    return post(
+      `${API_URL}/telemetry/page`,
+      {
+        page_url: document.location.href,
+        page_title: document.title,
+        pathname: route,
+        ph: {
+          referrer: document.referrer,
+          ...telemetryProps,
+        },
       },
-    }, {
-      credentials: 'include'
-    })
+      {
+        credentials: 'include',
+      }
+    )
   }
 
-
-  function handlePageLeaveTelemetry() {
-    post(`http://localhost:3231/telemetry/pageleave`, {
-      // post(`${API_URL}/telemetry/pageleave`, {
-        route: document.location.pathname,
-        current_url: document.location.href,
-      }, {
-        credentials: 'include'
-      })
+  const handlePageLeaveTelemetry = async () => {
+    post(
+      `${API_URL}/telemetry/pageleave`,
+      {
+        page_url: document.location.href,
+        page_title: document.title,
+        pathname: document.location.pathname,
+      },
+      {
+        credentials: 'include',
+      }
+    )
   }
 
   useEffect(() => {
-    // if (blockEvents) return
+    if (blockEvents) return
     const handleBeforeUnload = () => {
-        if (router.isReady) {
-          handlePageLeaveTelemetry()
-        }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
+      if (router.isReady) {
+        handlePageLeaveTelemetry()
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
     return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-}, [router.isReady]);
-
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [router.isReady])
 
   useEffect(() => {
-    // if (blockEvents) return
+    if (blockEvents) return
     function handleRouteChange(url: string) {
       handlePageTelemetry(url)
     }
@@ -89,7 +91,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [router.events, consentValue])
 
   useEffect(() => {
-    // if (blockEvents) return
+    if (blockEvents) return
     /**
      * Send page telemetry on first page load
      */

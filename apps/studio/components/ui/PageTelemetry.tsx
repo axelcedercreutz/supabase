@@ -15,15 +15,15 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     const handleBeforeUnload = () => {
-        if (router.isReady) {
-          handlePageLeaveTelemetry()
-        }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
+      if (router.isReady) {
+        if (snap.isOptedInTelemetry) handlePageLeaveTelemetry()
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
     return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-}, [router.isReady]);
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [router.isReady, snap.isOptedInTelemetry])
 
   useEffect(() => {
     const consent =
@@ -50,8 +50,8 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
     // Send page telemetry on first page load
     // Waiting for router ready before sending page_view
     // if not the path will be dynamic route instead of the browser url
-    if(router.isReady) {
-    // if (router.isReady && snap.isOptedInTelemetry) {
+    if (router.isReady) {
+      // if (router.isReady && snap.isOptedInTelemetry) {
       handlePageTelemetry(router.asPath)
     }
   }, [router.isReady, snap.isOptedInTelemetry])
@@ -82,43 +82,42 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
    * @param route: the browser url
    * */
   const handlePageTelemetry = async (route: string) => {
-    // if (IS_PLATFORM) {
-      /**
-       * Get referrer from browser
-       */
-      let referrer: string | undefined = document.referrer
-
+    if (IS_PLATFORM) {
       /**
        * Send page telemetry
        */
-      post(`http://localhost:3231/telemetry/page`, {
-      // post(`${API_URL}/telemetry/page`, {
-        referrer: referrer,
-        title: document.title,
-        route,
-        current_url: document.location.href,
-        ga: {
-          screen_resolution: telemetryProps?.screenResolution,
-          language: telemetryProps?.language,
-          user_agent: telemetryProps?.userAgent,
-          search: telemetryProps?.search,
+      post(
+        `${API_URL}/telemetry/page`,
+        {
+          page_url: document.location.href,
+          page_title: document.title,
+          pathname: route,
+          ph: {
+            referrer: document.referrer,
+            ...telemetryProps,
+          },
         },
-      }, {
-        credentials: 'include'
-      })
-    // }
+        {
+          credentials: 'include',
+        }
+      )
+    }
   }
 
   const handlePageLeaveTelemetry = async () => {
-    // if (IS_PLATFORM) {
-      post(`http://localhost:3231/telemetry/pageleave`, {
-      // post(`${API_URL}/telemetry/pageleave`, {
-        route: document.location.pathname,
-        current_url: document.location.href,
-      }, {
-        credentials: 'include'
-      })
-    // }
+    if (IS_PLATFORM) {
+      post(
+        `${API_URL}/telemetry/pageleave`,
+        {
+          page_url: document.location.href,
+          page_title: document.title,
+          pathname: document.location.pathname,
+        },
+        {
+          credentials: 'include',
+        }
+      )
+    }
   }
 
   return <>{children}</>

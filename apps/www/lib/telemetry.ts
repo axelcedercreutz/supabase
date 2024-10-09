@@ -11,10 +11,11 @@ export interface TelemetryEvent {
 }
 
 export interface TelemetryProps {
-  screenResolution?: string
   language: string
-  userAgent?: string
   search?: string
+  user_agent?: string
+  viewport_height?: number
+  viewport_width?: number
 }
 
 const noop = () => {}
@@ -22,7 +23,7 @@ const noop = () => {}
 // This event is the same as in studio/lib/telemetry.tx
 // but uses different ENV variables for www
 
-const sendEvent = (event: TelemetryEvent, gaProps: TelemetryProps, router: NextRouter) => {
+const sendEvent = (event: TelemetryEvent, phProps: TelemetryProps, router: NextRouter) => {
   const consent =
     typeof window !== 'undefined'
       ? localStorage.getItem(LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT)
@@ -31,28 +32,30 @@ const sendEvent = (event: TelemetryEvent, gaProps: TelemetryProps, router: NextR
   const IS_DEV = !IS_PROD && !IS_PREVIEW
   const blockEvent = IS_DEV || !hasAcceptedConsent
 
-  // if (blockEvent) return noop
+  if (blockEvent) return noop
 
   const { category, action, label, value } = event
-  return post(`http://localhost:3231/telemetry/event`, {
-  // return post(`${API_URL}/telemetry/event`, {
-    action: action,
-    category: category,
-    label: label,
-    value: value,
-    page_referrer: document?.referrer,
-    current_url: document?.location.href,
-    page_title: document?.title,
-    page_location: router.asPath,
-    ga: {
-      screen_resolution: gaProps.screenResolution,
-      language: gaProps.language,
-      user_agent: gaProps.userAgent,
-      search: gaProps.search,
+  return post(
+    `${API_URL}/telemetry/event`,
+    {
+      action,
+      page_url: document?.location.href,
+      page_title: document?.title,
+      pathname: router.asPath,
+      ph: {
+        referrer: document?.referrer,
+        ...phProps,
+      },
+      custom_properties: {
+        category,
+        label,
+        value,
+      },
     },
-  }, {
-    credentials: 'include'
-  })
+    {
+      credentials: 'include',
+    }
+  )
 }
 
 export default {
