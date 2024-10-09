@@ -35,8 +35,7 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
 
   useEffect(() => {
     function handleRouteChange(url: string) {
-      handlePageTelemetry(url)
-      // if (snap.isOptedInTelemetry) handlePageTelemetry(url)
+      if (snap.isOptedInTelemetry) handlePageTelemetry(url)
     }
 
     // Listen for page changes after a navigation or when the query changes
@@ -50,8 +49,7 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
     // Send page telemetry on first page load
     // Waiting for router ready before sending page_view
     // if not the path will be dynamic route instead of the browser url
-    if (router.isReady) {
-      // if (router.isReady && snap.isOptedInTelemetry) {
+    if (router.isReady && snap.isOptedInTelemetry) {
       handlePageTelemetry(router.asPath)
     }
   }, [router.isReady, snap.isOptedInTelemetry])
