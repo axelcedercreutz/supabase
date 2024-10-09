@@ -44,18 +44,6 @@ const PageTelemetry = ({ children }: PropsWithChildren<{}>) => {
   const { mutate: sendGroupsReset } = useSendGroupsResetMutation()
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (router.isReady) {
-        if (snap.isOptedInTelemetry) handlePageLeaveTelemetry()
-      }
-    }
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [router.isReady, snap.isOptedInTelemetry])
-
-  useEffect(() => {
     const consent =
       typeof window !== 'undefined'
         ? localStorage.getItem(LOCAL_STORAGE_KEYS.TELEMETRY_CONSENT)

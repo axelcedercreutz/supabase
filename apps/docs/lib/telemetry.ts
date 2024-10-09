@@ -32,9 +32,6 @@ const useSendTelemetryEvent = () => {
         // @ts-ignore [JOSHEN] To be fixed for PH
         page_location: pathname,
       },
-      headers: {
-        credentials: 'include',
-      },
     })
       .then(({ error }) => {
         if (error) console.error(error)

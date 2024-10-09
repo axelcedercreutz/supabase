@@ -33,52 +33,20 @@ export default function App({ Component, pageProps }: AppProps) {
   useThemeSandbox()
 
   function handlePageTelemetry(route: string) {
-    return post(
-      `${API_URL}/telemetry/page`,
-      {
-        page_url: document.location.href,
-        page_title: document.title,
-        pathname: route,
-        ph: {
-          referrer: document.referrer,
-          ...telemetryProps,
-        },
+    return post(`${API_URL}/telemetry/page`, {
+      referrer: document.referrer,
+      title: document.title,
+      route,
+      ga: {
+        screen_resolution: telemetryProps?.screenResolution,
+        language: telemetryProps?.language,
       },
-      {
-        credentials: 'include',
-      }
-    )
-  }
-
-  const handlePageLeaveTelemetry = async () => {
-    post(
-      `${API_URL}/telemetry/pageleave`,
-      {
-        page_url: document.location.href,
-        page_title: document.title,
-        pathname: document.location.pathname,
-      },
-      {
-        credentials: 'include',
-      }
-    )
+    })
   }
 
   useEffect(() => {
     if (blockEvents) return
-    const handleBeforeUnload = () => {
-      if (router.isReady) {
-        handlePageLeaveTelemetry()
-      }
-    }
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [router.isReady])
 
-  useEffect(() => {
-    if (blockEvents) return
     function handleRouteChange(url: string) {
       handlePageTelemetry(url)
     }
