@@ -8,19 +8,34 @@
  * @group Events
  * @sources client-side www
  */
-export type sign_in_clicked = never
+export interface sign_in_clicked {
+  /**
+   * The placement of the button.
+   */
+  placement: string
+}
 /**
  * The user clicked the "Start project" -button.
  * @group Events
  * @sources client-side www
  */
-export type start_project_clicked = never
+export interface start_project_clicked {
+  /**
+   * The placement of the button.
+   */
+  placement: string
+}
 /**
  * The user clicked the "Request demo" -button.
  * @group Events
  * @sources client-side www
  */
-export type request_demo_clicked = never
+export interface request_demo_clicked {
+  /**
+   * The placement of the button.
+   */
+  placement: string
+}
 /**
  * The user submitted the "Request demo" form.
  * @group Events
@@ -32,62 +47,116 @@ export type request_demo_form_submit = never
  * @group Events
  * @sources client-side www
  */
-export type github_clicked = never
+export interface github_clicked {
+  /**
+   * The placement of the button.
+   */
+  placement: string
+}
 
 /**
  * The user clicked a plan's CTA -button.
  * @group Events
  * @sources client-side www
  */
-export type plan_cta_clicked = never
+export interface plan_cta_clicked {
+  /**
+   * The placement of the button.
+   */
+  placement: string
+  /**
+   * The plan that was clicked.
+   */
+  plan: 'free' | 'pro' | 'team'
+}
 /**
  * The user clicked the "See documentation" -button.
  * @group Events
  * @sources client-side www
  */
-export type see_documentation_clicked = never
+export interface see_documentation_clicked {
+  /**
+   * The placement of the button.
+   */
+  placement: string
+}
 /**
  * The user clicked the "Contact enterprise sales" -button.
  * @group Events
  * @sources client-side www
  */
-export type contact_enterprise_clicked = never
+export interface contact_enterprise_clicked {
+  /**
+   * The placement of the button.
+   */
+  placement: string
+}
 /**
  * A subhero product card is clicked. The type is passed as a property
  * @group Events
  * @sources client-side www
  */
-export type product_card_clicked = never
+export interface product_card_clicked {
+  /**
+   * The type of product that was clicked.
+   */
+  type: 'database' | 'auth' | 'storage' | 'functions' | 'realtime' | 'vector'
+}
 /**
  * A project template is clicked. The project is passed as a property.
  * @group Events
  * @sources client-side www
  */
-export type project_template_clicked = never
+export interface project_template_clicked {
+  /**
+   * The project that was clicked.
+   */
+  project: string
+}
 /**
  * A customer story card is clicked. The customer is passed as a property.
  * @group Events
  * @sources client-side www
  */
-export type customer_card_clicked = never
+export interface customer_card_clicked {
+  /**
+   * The customer that was clicked.
+   */
+  customer: string
+}
 /**
  * "Open a github issue" -button clicked
  * @group Events
  * @sources client-side www
  */
-export type github_issue_open_clicked = never
+export interface github_issue_open_clicked {
+  /**
+   * The placement of the button.
+   */
+  placement: string
+}
 /**
  * "Request a feature" -button clicked
  * @group Events
  * @sources client-side www
  */
-export type github_request_feature_clicked = never
+export interface github_request_feature_clicked {
+  /**
+   * The placement of the button.
+   */
+  placement: string
+}
 /**
  * A open sources project is clicked. The open sources project is passed as a property.
  * @group Events
  * @sources client-side www
  */
-export type open_source_project_clicked = never
+export interface open_source_project_clicked {
+  /**
+   * The open source project that was clicked.
+   */
+  project: string
+}
 
 /**
  * Event that's used to combine all acquisition events.

@@ -8,7 +8,20 @@
  * @group Events
  * @source server-side
  */
-export type organization_created = never
+export interface organization_created {
+  /**
+   * The supscription plan name
+   */
+  subscriptionPlanName: 'free' | 'pro' | 'team' | 'enterprise'
+  /**
+   * The subscription plan billing cycle
+   */
+  subscriptionPlanBillingCycle: 'monthly' | 'yearly'
+  /**
+   * The subscription plan monthly value
+   */
+  subscriptionPlanValueMonthly: number
+}
 /**
  * An organization is removed.
  * @group Events
@@ -26,7 +39,12 @@ export type organization_updated = never
  * @group Events
  * @source server-side
  */
-export type project_created = never
+export type project_created = {
+  /**
+   * The status of the project
+   */
+  projectStatus: 'active' | 'idle' | 'suspended'
+}
 /**
  * A project is restored.
  * @group Events
@@ -56,7 +74,12 @@ export type sign_up = never
  * @group Events
  * @source client-side studio
  */
-export type example_project_clicked = never
+export interface example_project_clicked {
+  /**
+   * The name of the example project
+   */
+  project: string
+}
 /**
  * The "Help" -button is clicked.
  * @group Events
@@ -74,7 +97,12 @@ export type connect_project_clicked = never
  * @group Events
  * @source client-side studio
  */
-export type import_table_data_clicked = never
+export interface import_table_data_clicked {
+  /**
+   * The type of import selected
+   */
+  type: 'csv' | 'manual' | 'sql'
+}
 
 /**
  * Event that's used to combine all activation events.

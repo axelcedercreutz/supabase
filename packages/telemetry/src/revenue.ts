@@ -9,7 +9,7 @@
  * @group Events
  * @source server-side
  */
-export type subscription_canceled = {
+export interface subscription_canceled {
   /**
    * The name of the canceled plan.
    */
@@ -30,7 +30,7 @@ export type subscription_canceled = {
  * @source client-side, studio
  */
 
-export type subscription_updated = {
+export interface subscription_updated {
   /**
    * The direction of the change.
    */
@@ -68,7 +68,7 @@ export type subscription_updated = {
  * @source client-side, studio
  */
 
-export type upgrade_cta_clicked = {
+export interface upgrade_cta_clicked {
   /**
    * The placement of the upgrade CTA.
    */

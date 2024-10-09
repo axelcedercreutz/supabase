@@ -38,7 +38,12 @@ export type database_trigger_created = never
  * @group Events
  * @source server-side
  */
-export type database_extension_enabled = never
+export interface database_extension_enabled {
+  /**
+   * The name of the extension.
+   */
+  extensionName: string
+}
 /**
  * An index is created to the database.
  * @group Events
@@ -74,43 +79,82 @@ export type edge_function_created = never
  * @group Events
  * @source client-side studio
  */
-export type ai_suggestion_asked = never
+export interface ai_suggestion_asked {
+  /**
+   * The type of the assisant.
+   */
+  assistantType: string
+}
 /**
  * User accepted a suggestion from our AI assistant.
  * @group Events
  * @source client-side studio
  */
-export type ai_suggestion_accepted = never
+export interface ai_suggestion_accepted {
+  /**
+   * The type of the assisant.
+   */
+  assistantType: string
+}
 /**
  * User copied a suggestion from our AI assistant.
  * @group Events
  * @source client-side studio
  */
-export type ai_suggestion_copied = never
+export interface ai_suggestion_copied {
+  /**
+   * The type of the assisant.
+   */
+  assistantType: string
+}
 /**
  * Insert code suggestion from our AI assistant.
  * @group Events
  * @source client-side studio
  */
-export type ai_suggestion_inserted = never
+export interface ai_suggestion_inserted {
+  /**
+   * The type of the assisant.
+   */
+  assistantType: string
+}
 /**
  * User rejected a suggestion from our AI assistant.
  * @group Events
  * @source client-side studio
  */
-export type ai_suggestion_rejected = never
+export interface ai_suggestion_rejected {
+  /**
+   * The type of the assisant.
+   */
+  assistantType: string
+}
 /**
  * User replaced a suggestion from our AI assistant.
  * @group Events
  * @source client-side studio
  */
-export type ai_suggestion_replaced = never
+export interface ai_suggestion_replaced {
+  /**
+   * The type of the assisant.
+   */
+  assistantType: string
+}
 /**
  * Voted Yes or No in docs feedback on Is this helpful?
  * @group Events
  * @source client-side docs
  */
-export type feedback_voted = never
+export interface feedback_voted {
+  /**
+   * Is the docs considered helpful by the user.
+   */
+  isDocHelpful: boolean
+  /**
+   * Which docs was rated.
+   */
+  docTitle: string
+}
 /**
  * The user has submitted feedback.
  * @group Events
@@ -154,14 +198,24 @@ export type sql_query_submitted = never
  * @group Events
  * @source client-side studio
  */
-export type sql_quickstart_clicked = never
+export interface sql_quickstart_clicked {
+  /**
+   * The title of the quickstart card.
+   */
+  label: string
+}
 /**
  * Clicked on a SQL template card in studio, title will be in label.
  *
  * @group Events
  * @source client-side studio
  */
-export type sql_template_script_clicked = never
+export interface sql_template_script_clicked {
+  /**
+   * The title of the quickstart card.
+   */
+  label: string
+}
 /**
  * Clicked on a specific message in realtime inspector in dashboard.
  *
@@ -175,7 +229,12 @@ export type specific_message_clicked = never
  * @group Events
  * @source client-side studio
  */
-export type user_invitation_sent = never
+export interface user_invitation_sent {
+  /**
+   * The role of the invited user.
+   */
+  invitedUserRole: 'owner' | 'administrator' | 'developer'
+}
 
 /**
  * Event that's used to combine all adoption events.

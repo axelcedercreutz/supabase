@@ -24,13 +24,3 @@ client-side, studio
 client-side, docs
 server-side
 ```
-
-### `@group`
-What category the event is part of. The options are:
-```
-Acquisition
-Activation
-Adoption
-Revenue
-General
-```

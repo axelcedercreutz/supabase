@@ -9,7 +9,7 @@
  * @group Events
  * @source client-side www, studio, docs
  */
-export type $pageleave = {
+export interface $pageleave {
   /**
    * The URL of the page.
    */
@@ -26,7 +26,7 @@ export type $pageleave = {
  * @group Events
  * @source client-side www, studio, docs
  */
-export type $pageview = {
+export interface $pageview {
   /**
    * The URL of the page.
    */

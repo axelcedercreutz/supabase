@@ -8,7 +8,7 @@ const sendEvent = <K extends Telemetry.EventName>(
   console.log(action, properties)
 }
 
-console.log(sendEvent('sign_up'))
+console.log(sendEvent('sign_in'))
 
 console.log(
   sendEvent('$pageleave', {
